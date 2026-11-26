@@ -141,7 +141,7 @@ async function showProfile(empId) {
     const department = person.exists() ? person.data().department : '';
     const numbers = lockers.docs
       .map((item) => Number(item.data().lockerNo || item.id))
-      .filter((value) => value >= 1 && value <= 4)
+      .filter((value) => Number.isInteger(value) && value >= 1 && value <= 99)
       .sort((a, b) => a - b)
       .map((value) => `Locker ${String(value).padStart(2, '0')}`);
     dashTitle.textContent = name || empId;

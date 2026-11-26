@@ -1,6 +1,7 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js';
 import {
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
@@ -17,6 +18,7 @@ export const app = initializeApp(config.firebaseConfig);
 export const db = getFirestore(app);
 export {
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,

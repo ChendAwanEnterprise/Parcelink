@@ -36,13 +36,15 @@ service cloud.firestore {
     match /lockers/{lockerId} {
       allow read: if true;
       allow create: if isAdmin()
-        && lockerId.matches('^[1-4]$')
+        && lockerId.matches('^([1-9]|[1-9][0-9])$')
         && request.resource.data.lockerNo == int(lockerId)
         && request.resource.data.status == 'empty'
         && request.resource.data.ownerEmpId == null
         && request.resource.data.activeParcelId == null;
       allow update: if isAdminOwnerChange() || isDriverUnlock() || isDriverOccupied() || isOwnerEmpty();
-      allow delete: if false;
+      allow delete: if isAdmin()
+        && resource.data.status == 'empty'
+        && resource.data.activeParcelId == null;
     }
 
     function isAdminOwnerChange() {
@@ -101,7 +103,7 @@ service cloud.firestore {
         ])
         && data.lockerNo is int
         && data.lockerNo >= 1
-        && data.lockerNo <= 4
+        && data.lockerNo <= 99
         && data.empId is string
         && data.ownerName is string
         && data.ownerName.size() < 80

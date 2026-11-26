@@ -35,10 +35,10 @@ function showUnlocked(id) {
 }
 
 async function loadLocker() {
-  if (!Number.isInteger(lockerNo) || lockerNo < 1 || lockerNo > 4) {
+  if (!Number.isInteger(lockerNo) || lockerNo < 1 || lockerNo > 99) {
     title.textContent = 'Locker not found';
-    ownerLine.textContent = 'This QR code is not for one of the four lockers.';
-    showBanner(error, 'This QR code is not for one of the four lockers.', 'bad');
+    ownerLine.textContent = 'This QR code is not a locker.';
+    showBanner(error, 'This QR code is not a locker.', 'bad');
     submit.disabled = true;
     return;
   }

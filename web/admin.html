@@ -27,7 +27,7 @@
   <main class="stack">
     <div>
       <h1>Lockers</h1>
-      <p class="lede">Assign each locker to one person. Print the QR and stick it on that box.</p>
+      <p class="lede">Assign each locker to one person. Add a box when you need one, and delete a locker only when it is empty.</p>
     </div>
     <p id="banner" class="banner hidden"></p>
     <form id="signin" class="card signin">
@@ -44,6 +44,7 @@
     <section id="desk" class="stack hidden">
       <div class="actions">
         <button id="signout" class="secondary" type="button">Sign out</button>
+        <button id="add-locker" class="secondary" type="button">Add locker</button>
         <button id="print" class="secondary" type="button">Print QR codes</button>
       </div>
       <div id="grid" class="locker-grid"></div>

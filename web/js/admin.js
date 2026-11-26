@@ -1,5 +1,5 @@
 import { config, explain, pageUrl, registerWorker, showBanner } from './common.js';
-import { app, collection, db, doc, getDocs, setDoc, updateDoc } from './store.js';
+import { app, collection, db, deleteDoc, doc, getDocs, setDoc, updateDoc } from './store.js';
 import { getAuth, onAuthStateChanged as watchAuth, signInWithEmailAndPassword, signOut } from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js';
 
 const EMPLOYEES = [
@@ -40,12 +40,11 @@ async function seed() {
     getDocs(collection(db, 'lockers')),
   ]);
   const ids = new Set(people.docs.map((item) => item.id));
-  const lockerIds = new Set(lockerSnap.docs.map((item) => item.id));
   const writes = EMPLOYEES
     .filter(([empId]) => !ids.has(empId))
     .map(([empId, name, department]) => setDoc(doc(db, 'employees', empId), { empId, name, department }));
-  for (let lockerNo = 1; lockerNo <= 4; lockerNo += 1) {
-    if (!lockerIds.has(String(lockerNo))) {
+  if (lockerSnap.empty) {
+    for (let lockerNo = 1; lockerNo <= 4; lockerNo += 1) {
       writes.push(setDoc(doc(db, 'lockers', String(lockerNo)), {
         lockerNo,
         ownerEmpId: null,
@@ -125,7 +124,33 @@ function lockerCard(lockerNo, locker, parcel) {
   link.textContent = url;
   qrWrap.append(image, link);
 
-  card.append(heading, state, field, save, qrWrap);
+  const remove = document.createElement('button');
+  remove.type = 'button';
+  remove.className = 'secondary';
+  remove.textContent = 'Delete locker';
+  const canDelete = (locker.status || 'empty') === 'empty' && !locker.activeParcelId;
+  remove.disabled = !canDelete;
+  remove.addEventListener('click', async () => {
+    const label = `Locker ${String(lockerNo).padStart(2, '0')}`;
+    if (!window.confirm(`Delete ${label}? The QR on that box will stop working.`)) return;
+    remove.disabled = true;
+    try {
+      await deleteDoc(doc(db, 'lockers', String(lockerNo)));
+      showBanner(banner, `${label} deleted.`, 'good');
+      await render();
+    } catch (err) {
+      showBanner(banner, explain(err), 'bad');
+      remove.disabled = false;
+    }
+  });
+
+  card.append(heading, state, field, save, qrWrap, remove);
+  if (!canDelete) {
+    const note = document.createElement('p');
+    note.className = 'hint';
+    note.textContent = 'Empty this locker before deleting it.';
+    card.append(note);
+  }
   if (locker.ownerEmpId) {
     const dash = document.createElement('a');
     dash.className = 'btn secondary';
@@ -163,11 +188,35 @@ async function render() {
     const previous = latest.get(key);
     if (!previous || (parcel.createdAt?.seconds || 0) > (previous.createdAt?.seconds || 0)) latest.set(key, parcel);
   }
-  const cards = [];
-  for (let lockerNo = 1; lockerNo <= 4; lockerNo += 1) {
-    cards.push(lockerCard(lockerNo, lockers.get(String(lockerNo)) || {}, latest.get(String(lockerNo)) || null));
-  }
+  const numbers = lockerSnap.docs
+    .map((item) => Number(item.data().lockerNo || item.id))
+    .filter((value) => Number.isInteger(value) && value >= 1 && value <= 99)
+    .sort((a, b) => a - b);
+  const cards = numbers.map((lockerNo) => lockerCard(
+    lockerNo,
+    lockers.get(String(lockerNo)) || {},
+    latest.get(String(lockerNo)) || null,
+  ));
   grid.replaceChildren(...cards);
+}
+
+async function addLocker() {
+  const snap = await getDocs(collection(db, 'lockers'));
+  const used = new Set(snap.docs.map((item) => Number(item.id)));
+  let lockerNo = 1;
+  while (used.has(lockerNo) && lockerNo <= 99) lockerNo += 1;
+  if (lockerNo > 99) {
+    showBanner(banner, 'Parcelink can hold 99 lockers.', 'bad');
+    return;
+  }
+  await setDoc(doc(db, 'lockers', String(lockerNo)), {
+    lockerNo,
+    ownerEmpId: null,
+    status: 'empty',
+    activeParcelId: null,
+  });
+  showBanner(banner, `Locker ${String(lockerNo).padStart(2, '0')} added. Print its QR and stick it on the box.`, 'good');
+  await render();
 }
 
 signIn.addEventListener('submit', async (event) => {
@@ -182,6 +231,17 @@ signIn.addEventListener('submit', async (event) => {
 
 document.querySelector('#signout').addEventListener('click', () => signOut(auth));
 document.querySelector('#print').addEventListener('click', () => window.print());
+document.querySelector('#add-locker').addEventListener('click', async () => {
+  const button = document.querySelector('#add-locker');
+  button.disabled = true;
+  try {
+    await addLocker();
+  } catch (err) {
+    showBanner(banner, explain(err), 'bad');
+  } finally {
+    button.disabled = false;
+  }
+});
 
 watchAuth(auth, async (user) => {
   if (!user) {
