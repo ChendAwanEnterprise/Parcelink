@@ -284,6 +284,14 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
 .pill-unlocked, .pill-stored { background: #e8f8ee; color: #1d7a3a; }
 .pill-occupied { background: #fff4e5; color: #9a5b00; }
 .pill-collected { background: #f2f2f7; color: #6e6e73; }
+.history-title {
+  margin: 0.8rem 0 0;
+  font-size: 0.78rem;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
 
 @media (max-width: 700px) {
   .top {

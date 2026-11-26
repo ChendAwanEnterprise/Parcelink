@@ -21,6 +21,8 @@ const dashLede = document.querySelector('#dash-lede');
 const enable = document.querySelector('#enable');
 const switchPerson = document.querySelector('#switch');
 const list = document.querySelector('#list');
+const historyWrap = document.querySelector('#history-wrap');
+const historyList = document.querySelector('#history');
 const empty = document.querySelector('#empty');
 const banner = document.querySelector('#banner');
 
@@ -47,7 +49,7 @@ function parcelNode(id, parcel) {
   pill.textContent = state;
   meta.append(document.createTextNode(' · '), pill);
   card.append(company, meta);
-  if (parcel.photoUrl) {
+  if (parcel.photoUrl && parcel.status !== 'collected') {
     const img = document.createElement('img');
     img.className = 'parcel-photo';
     img.alt = 'Parcel photo';
@@ -94,9 +96,14 @@ function showParcels(docs) {
     .sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
   alertNewParcels(rows);
   knownIds = new Set(rows.map((row) => row.id));
+  const current = rows.filter((row) => row.status !== 'collected');
+  const past = rows.filter((row) => row.status === 'collected');
   list.replaceChildren();
-  empty.classList.toggle('hidden', rows.length > 0);
-  for (const row of rows) list.append(parcelNode(row.id, row));
+  historyList.replaceChildren();
+  empty.classList.toggle('hidden', current.length > 0);
+  historyWrap.classList.toggle('hidden', past.length === 0);
+  for (const row of current) list.append(parcelNode(row.id, row));
+  for (const row of past) historyList.append(parcelNode(row.id, row));
   const focus = new URLSearchParams(location.search).get('parcel');
   if (focus) document.getElementById(`parcel-${focus}`)?.scrollIntoView({ block: 'center' });
 }
@@ -184,6 +191,8 @@ switchPerson.addEventListener('click', () => {
   url.searchParams.delete('id');
   history.replaceState(null, '', url);
   list.replaceChildren();
+  historyList.replaceChildren();
+  historyWrap.classList.add('hidden');
   empty.classList.add('hidden');
   dash.classList.add('hidden');
   intro.classList.remove('hidden');
