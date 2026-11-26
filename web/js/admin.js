@@ -1,5 +1,5 @@
 import { config, explain, pageUrl, registerWorker, showBanner } from './common.js';
-import { app, collection, db, deleteDoc, doc, getDocs, setDoc, updateDoc } from './store.js';
+import { app, collection, db, deleteDoc, doc, getDocs, query, setDoc, updateDoc, where } from './store.js';
 import { getAuth, onAuthStateChanged as watchAuth, signInWithEmailAndPassword, signOut } from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js';
 
 const EMPLOYEES = [
@@ -128,15 +128,13 @@ function lockerCard(lockerNo, locker, parcel) {
   remove.type = 'button';
   remove.className = 'secondary';
   remove.textContent = 'Delete locker';
-  const canDelete = (locker.status || 'empty') === 'empty' && !locker.activeParcelId;
-  remove.disabled = !canDelete;
   remove.addEventListener('click', async () => {
     const label = `Locker ${String(lockerNo).padStart(2, '0')}`;
-    if (!window.confirm(`Delete ${label}? The QR on that box will stop working.`)) return;
+    if (!window.confirm(`Delete ${label} and every parcel recorded for it? This cannot be undone.`)) return;
     remove.disabled = true;
     try {
-      await deleteDoc(doc(db, 'lockers', String(lockerNo)));
-      showBanner(banner, `${label} deleted.`, 'good');
+      await deleteLockerData(lockerNo);
+      showBanner(banner, `${label} and its parcel records were deleted.`, 'good');
       await render();
     } catch (err) {
       showBanner(banner, explain(err), 'bad');
@@ -145,12 +143,6 @@ function lockerCard(lockerNo, locker, parcel) {
   });
 
   card.append(heading, state, field, save, qrWrap, remove);
-  if (!canDelete) {
-    const note = document.createElement('p');
-    note.className = 'hint';
-    note.textContent = 'Empty this locker before deleting it.';
-    card.append(note);
-  }
   if (locker.ownerEmpId) {
     const dash = document.createElement('a');
     dash.className = 'btn secondary';
@@ -212,6 +204,12 @@ async function render() {
     latest.get(String(lockerNo)) || null,
   ));
   grid.replaceChildren(...cards);
+}
+
+async function deleteLockerData(lockerNo) {
+  const parcels = await getDocs(query(collection(db, 'parcels'), where('lockerNo', '==', lockerNo)));
+  await Promise.all(parcels.docs.map((item) => deleteDoc(doc(db, 'parcels', item.id))));
+  await deleteDoc(doc(db, 'lockers', String(lockerNo)));
 }
 
 async function addLocker() {
