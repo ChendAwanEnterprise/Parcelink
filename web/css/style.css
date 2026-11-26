@@ -110,6 +110,13 @@ button:disabled { opacity: 0.45; cursor: not-allowed; }
 .banner.good { background: #e5f6eb; color: #14663a; }
 .hidden { display: none !important; }
 .eyebrow { letter-spacing: 0.14em; text-transform: uppercase; font-size: 0.78rem; color: var(--muted); margin: 0; }
+.staff-id {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.18em;
+  font-size: 2.2rem;
+  font-weight: 800;
+  margin: 0.35rem 0;
+}
 
 .preview {
   display: block;

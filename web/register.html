@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#13281f">
+  <title>Register · Parcelink</title>
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="index.html">
+      <span class="brand-mark">Parcel</span>
+      <span class="brand-name">Parcelink</span>
+    </a>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="register.html" aria-current="page">Register</a>
+      <a href="owner.html">Owner</a>
+      <a href="admin.html">Admin</a>
+    </nav>
+  </header>
+  <main class="narrow stack">
+    <div>
+      <h1>Register</h1>
+      <p class="lede">Add yourself as staff. Parcelink gives you an ID to keep.</p>
+    </div>
+    <p id="error" class="banner bad hidden"></p>
+    <form id="form" class="card">
+      <div class="field">
+        <label for="name">Name</label>
+        <input id="name" name="name" required placeholder="Aina" autocomplete="name">
+      </div>
+      <div class="field">
+        <label for="department">Department</label>
+        <input id="department" name="department" required placeholder="Finance">
+      </div>
+      <button class="full" type="submit">Get my ID</button>
+    </form>
+    <section id="done" class="card hidden">
+      <p class="eyebrow">Your staff ID</p>
+      <p id="new-id" class="staff-id"></p>
+      <p id="new-who" class="hint"></p>
+      <p>Save this ID. Open the Owner page on your phone, then ask an admin to assign your locker.</p>
+      <a id="owner-link" class="btn" href="owner.html">Open owner page</a>
+    </section>
+  </main>
+  <script src="config.js"></script>
+  <script type="module" src="js/register.js"></script>
+</body>
+</html>

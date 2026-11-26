@@ -1,6 +1,7 @@
-const CACHE = 'parcelink-v1';
+const CACHE = 'parcelink-v2';
 const SHELL = [
   './index.html',
+  './register.html',
   './drop.html',
   './owner.html',
   './admin.html',
@@ -10,6 +11,7 @@ const SHELL = [
   './js/common.js',
   './js/firebase.js',
   './js/home.js',
+  './js/register.js',
   './js/drop.js',
   './js/owner.js',
   './js/admin.js',

@@ -23,6 +23,8 @@ const password = document.querySelector('#password');
 
 registerWorker().catch(() => {});
 
+let staff = [];
+
 function option(value, label) {
   const node = document.createElement('option');
   node.value = value;
@@ -59,8 +61,8 @@ function lockerCard(lockerNo, locker, parcel) {
   heading.textContent = `Locker ${String(lockerNo).padStart(2, '0')}`;
   const state = document.createElement('p');
   state.className = 'who';
-  const owner = EMPLOYEES.find((row) => row[0] === locker.ownerEmpId);
-  const ownerLabel = owner ? `${owner[1]} · ${owner[0]}` : 'No owner';
+  const owner = staff.find((person) => person.empId === locker.ownerEmpId);
+  const ownerLabel = owner ? `${owner.name} · ${owner.empId}` : 'No owner';
   const statusLabel = locker.status === 'empty' ? 'Empty' : locker.status === 'unlocked' ? 'Unlocked' : 'Occupied';
   state.textContent = `${ownerLabel} · ${statusLabel}`;
 
@@ -70,8 +72,8 @@ function lockerCard(lockerNo, locker, parcel) {
   label.textContent = 'Assigned to';
   const select = document.createElement('select');
   select.append(option('', 'No owner'));
-  for (const [empId, name, department] of EMPLOYEES) {
-    select.append(option(empId, `${name} · ${department}`));
+  for (const person of staff) {
+    select.append(option(person.empId, `${person.name} · ${person.department}`));
   }
   select.value = locker.ownerEmpId || '';
   select.disabled = locker.status !== 'empty';
@@ -118,7 +120,15 @@ function lockerCard(lockerNo, locker, parcel) {
   return card;
 }
 
+async function loadStaff() {
+  const snap = await getDocs(collection(db, 'employees'));
+  staff = snap.docs
+    .map((item) => item.data())
+    .sort((a, b) => String(a.empId).localeCompare(String(b.empId)));
+}
+
 async function render() {
+  await loadStaff();
   const cards = [];
   for (let lockerNo = 1; lockerNo <= 4; lockerNo += 1) {
     const snap = await getDoc(doc(db, 'lockers', String(lockerNo)));
