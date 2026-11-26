@@ -1,4 +1,4 @@
-const CACHE = 'parcelink-v6';
+const CACHE = 'parcelink-v7';
 const PRECACHE = [
   './index.html',
   './css/style.css',

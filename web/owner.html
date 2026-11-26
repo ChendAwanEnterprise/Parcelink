@@ -25,9 +25,9 @@
     </nav>
   </header>
   <main class="narrow stack">
-    <div>
+    <div id="intro">
       <h1>Your locker</h1>
-      <p class="lede">Enter the staff ID from registration, then turn on notifications. <a href="register.html">Need an ID?</a></p>
+      <p class="lede">Enter the staff ID once. This phone then opens your dashboard. <a href="register.html">Need an ID?</a></p>
     </div>
     <p id="banner" class="banner hidden"></p>
     <form id="who" class="card">
@@ -35,12 +35,19 @@
         <label for="emp">Employee ID</label>
         <input id="emp" name="empId" autocomplete="off" required placeholder="EMP003">
       </div>
-      <div class="actions">
-        <button type="submit">Save</button>
-        <button id="enable" class="secondary" type="button">Enable notifications</button>
-      </div>
+      <button class="full" type="submit">Open my dashboard</button>
     </form>
-    <p id="empty" class="hint">No parcels yet.</p>
+    <section id="dash" class="stack hidden">
+      <div>
+        <h1 id="dash-title">Your locker</h1>
+        <p id="dash-lede" class="lede"></p>
+      </div>
+      <div class="actions">
+        <button id="enable" class="secondary" type="button">Enable notifications</button>
+        <button id="switch" class="secondary" type="button">Switch person</button>
+      </div>
+    </section>
+    <p id="empty" class="hint hidden">No parcels yet.</p>
     <div id="list" class="stack"></div>
   </main>
   <script src="config.js"></script>

@@ -95,8 +95,11 @@ function lockerCard(lockerNo, locker, parcel) {
   save.addEventListener('click', async () => {
     save.disabled = true;
     try {
-      await updateDoc(doc(db, 'lockers', String(lockerNo)), { ownerEmpId: select.value || null });
-      showBanner(banner, `Locker ${String(lockerNo).padStart(2, '0')} saved.`, 'good');
+      const ownerEmpId = select.value || null;
+      await updateDoc(doc(db, 'lockers', String(lockerNo)), { ownerEmpId });
+      const person = staff.find((item) => item.empId === ownerEmpId);
+      const who = person ? person.name : 'No owner';
+      showBanner(banner, ownerEmpId ? `Locker ${String(lockerNo).padStart(2, '0')} is ${who}'s. Their phone can open the owner dashboard once.` : `Locker ${String(lockerNo).padStart(2, '0')} has no owner.`, 'good');
       await render();
     } catch (err) {
       showBanner(banner, explain(err), 'bad');
@@ -123,6 +126,13 @@ function lockerCard(lockerNo, locker, parcel) {
   qrWrap.append(image, link);
 
   card.append(heading, state, field, save, qrWrap);
+  if (locker.ownerEmpId) {
+    const dash = document.createElement('a');
+    dash.className = 'btn secondary';
+    dash.href = pageUrl('owner.html', { id: locker.ownerEmpId });
+    dash.textContent = 'Owner dashboard';
+    card.append(dash);
+  }
   if (parcel?.photoUrl) {
     const img = document.createElement('img');
     img.className = 'parcel-photo';

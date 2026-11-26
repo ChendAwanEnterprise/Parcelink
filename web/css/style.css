@@ -265,7 +265,7 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
   text-align: center;
   overflow-wrap: anywhere;
 }
-.card > button { margin-top: 0.75rem; }
+.card > button, .card > .btn { margin-top: 0.75rem; }
 .who { color: var(--muted); margin: 0.35rem 0 0.85rem; font-size: 0.92rem; }
 
 .pill {
