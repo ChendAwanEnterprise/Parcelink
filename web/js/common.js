@@ -36,7 +36,23 @@ export function explain(err) {
   if (code === 'permission-denied') {
     return 'Firestore blocked this. Create the database if it is missing, then deploy the Parcelink rules.';
   }
+  if (/can't find variable:\s*notification/i.test(message) || /notification is not defined/i.test(message)) {
+    return iosInstallMessage();
+  }
   return message || 'Something went wrong.';
+}
+
+export function iosDevice() {
+  const agent = navigator.userAgent || '';
+  return /iPad|iPhone|iPod/i.test(agent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+}
+
+export function installedApp() {
+  return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+}
+
+export function iosInstallMessage() {
+  return 'On iPhone, Chrome cannot turn on notifications inside the browser. Tap Share, then Add to Home Screen. Open Parcelink from that icon, then tap Enable notifications.';
 }
 
 export function showBanner(node, message, kind) {

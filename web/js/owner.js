@@ -1,4 +1,4 @@
-import { config, explain, registerWorker, showBanner } from './common.js';
+import { config, explain, installedApp, iosDevice, iosInstallMessage, registerWorker, showBanner } from './common.js';
 import {
   collection,
   db,
@@ -122,6 +122,14 @@ enable.addEventListener('click', async () => {
     showBanner(banner, 'Save your employee ID first.', 'bad');
     return;
   }
+  if (iosDevice() && !installedApp()) {
+    showBanner(banner, iosInstallMessage(), 'bad');
+    return;
+  }
+  if (!('Notification' in window)) {
+    showBanner(banner, iosDevice() ? iosInstallMessage() : 'This browser cannot show notifications.', 'bad');
+    return;
+  }
   enable.disabled = true;
   try {
     const permission = await Notification.requestPermission();
@@ -141,7 +149,7 @@ enable.addEventListener('click', async () => {
       const title = payload.notification?.title || 'Parcelink';
       const body = payload.notification?.body || 'A parcel is in your locker';
       showBanner(banner, body, 'good');
-      if (Notification.permission === 'granted') new Notification(title, { body });
+      if ('Notification' in window && Notification.permission === 'granted') new Notification(title, { body });
     });
     showBanner(banner, 'Notifications are on for this phone.', 'good');
   } catch (err) {
@@ -151,5 +159,6 @@ enable.addEventListener('click', async () => {
   }
 });
 
+if (iosDevice() && !installedApp()) showBanner(banner, iosInstallMessage());
 if (savedEmp) watch(savedEmp);
 registerWorker().catch(() => {});
