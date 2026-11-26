@@ -28,10 +28,15 @@ export function withTimeout(promise, ms = 8000) {
 }
 
 export function explain(err) {
-  if (err && err.code === 'permission-denied') {
-    return 'Parcelink rejected this change. Ask an admin to open the site, and use a locker that is empty.';
+  const code = err && err.code;
+  const message = (err && err.message) || '';
+  if (code === 'unavailable' || /client is offline/i.test(message)) {
+    return 'Firestore is not turned on. In the Firebase console, open Firestore Database, create the database, then reload this page.';
   }
-  return (err && err.message) || 'Something went wrong.';
+  if (code === 'permission-denied') {
+    return 'Firestore blocked this. Create the database if it is missing, then deploy the Parcelink rules.';
+  }
+  return message || 'Something went wrong.';
 }
 
 export function showBanner(node, message, kind) {
