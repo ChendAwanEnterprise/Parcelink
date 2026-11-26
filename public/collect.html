@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Collect a parcel · Bella Smart Parcel</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="/collect">
+      <span class="brand-mark">Bella</span>
+      <span class="brand-name">Smart Parcel</span>
+    </a>
+    <nav>
+      <a href="/collect" aria-current="page">Collect</a>
+      <a href="/receiver">My parcels</a>
+      <a href="/admin">Admin</a>
+    </nav>
+  </header>
+  <main class="narrow stack">
+    <div>
+      <h1>Collect a parcel</h1>
+      <p class="lede">Enter your Employee ID and the 4-digit pickup code. Your slot will blink.</p>
+    </div>
+    <form id="form" class="card stack">
+      <div class="field">
+        <label for="emp">Employee ID</label>
+        <input id="emp" autocomplete="off" required placeholder="EMP003">
+      </div>
+      <div class="field">
+        <label for="code">Pickup code</label>
+        <input id="code" inputmode="numeric" autocomplete="off" required placeholder="4826" maxlength="4">
+      </div>
+      <p id="error" class="banner bad hidden"></p>
+      <button type="submit">Verify &amp; Locate Parcel</button>
+    </form>
+    <article id="result" class="card hidden"></article>
+  </main>
+  <script src="/js/collect.js"></script>
+</body>
+</html>

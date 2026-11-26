@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#13281f">
+  <title>Delivery · Parcelink</title>
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="index.html">
+      <span class="brand-mark">Parcel</span>
+      <span class="brand-name">Parcelink</span>
+    </a>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="owner.html">Owner</a>
+      <a href="admin.html">Admin</a>
+    </nav>
+  </header>
+  <main class="narrow stack">
+    <div>
+      <h1 id="title">Locker</h1>
+      <p id="owner-line" class="lede">Checking this locker.</p>
+    </div>
+    <p id="error" class="banner bad hidden"></p>
+    <form id="form" class="card">
+      <div class="field">
+        <label for="company">Courier company</label>
+        <input id="company" name="courierCompany" required placeholder="J&amp;T Express">
+      </div>
+      <div class="field">
+        <label for="reference">Tracking number <span class="hint">optional</span></label>
+        <input id="reference" name="reference" placeholder="JT123456">
+      </div>
+      <div class="field">
+        <label for="photo">Photo evidence</label>
+        <input id="photo" name="photo" type="file" accept="image/*" capture="environment" required>
+        <img id="preview" class="preview hidden" alt="Selected parcel photo">
+      </div>
+      <button id="submit" class="full" type="submit">Confirm</button>
+    </form>
+    <section id="unlocked" class="unlock hidden">
+      <p class="eyebrow">Locker</p>
+      <h1>Locker unlocked</h1>
+      <p>Place the parcel in the box and close the door.</p>
+      <button id="close-door" type="button">Door closed</button>
+    </section>
+  </main>
+  <script src="config.js"></script>
+  <script type="module" src="js/drop.js"></script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#13281f">
+  <title>Owner · Parcelink</title>
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="index.html">
+      <span class="brand-mark">Parcel</span>
+      <span class="brand-name">Parcelink</span>
+    </a>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="owner.html" aria-current="page">Owner</a>
+      <a href="admin.html">Admin</a>
+    </nav>
+  </header>
+  <main class="narrow stack">
+    <div>
+      <h1>Your locker</h1>
+      <p class="lede">Enter your employee ID on this phone, then turn on notifications.</p>
+    </div>
+    <p id="banner" class="banner hidden"></p>
+    <form id="who" class="card">
+      <div class="field">
+        <label for="emp">Employee ID</label>
+        <input id="emp" name="empId" autocomplete="off" required placeholder="EMP003">
+      </div>
+      <div class="actions">
+        <button type="submit">Save</button>
+        <button id="enable" class="secondary" type="button">Enable notifications</button>
+      </div>
+    </form>
+    <p id="empty" class="hint">No parcels yet.</p>
+    <div id="list" class="stack"></div>
+  </main>
+  <script src="config.js"></script>
+  <script type="module" src="js/owner.js"></script>
+</body>
+</html>

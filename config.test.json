@@ -1,0 +1,12 @@
+{
+  "port": 3099,
+  "slots": 4,
+  "timeouts": {
+    "placeMs": 10000,
+    "maxAttempts": 3,
+    "lockMs": 5000,
+    "blinkMs": 8000,
+    "offlineMs": 1000,
+    "overdueMs": 2000
+  }
+}

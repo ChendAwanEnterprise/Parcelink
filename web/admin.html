@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#13281f">
+  <title>Admin · Parcelink</title>
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="index.html">
+      <span class="brand-mark">Parcel</span>
+      <span class="brand-name">Parcelink</span>
+    </a>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="owner.html">Owner</a>
+      <a href="admin.html" aria-current="page">Admin</a>
+    </nav>
+  </header>
+  <main class="stack">
+    <div>
+      <h1>Lockers</h1>
+      <p class="lede">Assign each locker to one person. Print the QR and stick it on that box.</p>
+    </div>
+    <p id="banner" class="banner hidden"></p>
+    <form id="signin" class="card signin">
+      <div class="field">
+        <label for="email">Admin email</label>
+        <input id="email" name="email" type="email" autocomplete="username" required>
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" autocomplete="current-password" required>
+      </div>
+      <button class="full" type="submit">Sign in</button>
+    </form>
+    <section id="desk" class="stack hidden">
+      <div class="actions">
+        <button id="signout" class="secondary" type="button">Sign out</button>
+        <button id="print" class="secondary" type="button">Print QR codes</button>
+      </div>
+      <div id="grid" class="locker-grid"></div>
+    </section>
+  </main>
+  <script src="config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
+  <script type="module" src="js/admin.js"></script>
+</body>
+</html>

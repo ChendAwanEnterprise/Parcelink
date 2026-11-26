@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rack simulator · Bella Smart Parcel</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="/simulator">
+      <span class="brand-mark">Bella</span>
+      <span class="brand-name">Smart Parcel</span>
+    </a>
+    <nav>
+      <a href="/simulator" aria-current="page">Simulator</a>
+      <a href="/courier">Drop-off</a>
+      <a href="/admin">Admin</a>
+      <a href="/hwtest">Hardware test</a>
+    </nav>
+  </header>
+  <main class="stack">
+    <div class="toolbar">
+      <div>
+        <h1>Rack simulator</h1>
+        <p class="lede">Same two calls the ESP32 makes. Grey is off, solid green is place, blinking green is collect.</p>
+      </div>
+      <label class="switch"><input id="active" type="checkbox" checked> Simulator active</label>
+    </div>
+    <p id="msg" class="hint"></p>
+    <section id="rack" class="rack"></section>
+  </main>
+  <script src="/js/simulator.js"></script>
+</body>
+</html>

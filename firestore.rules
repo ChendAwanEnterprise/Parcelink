@@ -1,0 +1,147 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isAdmin() {
+      return request.auth != null && request.auth.uid == 'IxtJ9rORDEfHSRFsiZKVeLQnxhZ2';
+    }
+
+    function lockerDoc(lockerNo) {
+      return get(/databases/$(database)/documents/lockers/$(string(lockerNo))).data;
+    }
+
+    function sameExcept(fields) {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(fields);
+    }
+
+    match /employees/{empId} {
+      allow read: if true;
+      allow create, update: if isAdmin()
+        && request.resource.data.empId == empId
+        && request.resource.data.name is string
+        && request.resource.data.department is string;
+      allow delete: if false;
+    }
+
+    match /lockers/{lockerId} {
+      allow read: if true;
+      allow create: if isAdmin()
+        && lockerId.matches('^[1-4]$')
+        && request.resource.data.lockerNo == int(lockerId)
+        && request.resource.data.status == 'empty'
+        && request.resource.data.ownerEmpId == null
+        && request.resource.data.activeParcelId == null;
+      allow update: if isAdminOwnerChange() || isDriverUnlock() || isDriverOccupied() || isOwnerEmpty();
+      allow delete: if false;
+    }
+
+    function isAdminOwnerChange() {
+      return isAdmin()
+        && resource.data.status == 'empty'
+        && request.resource.data.status == 'empty'
+        && request.resource.data.activeParcelId == null
+        && sameExcept(['ownerEmpId'])
+        && (
+          request.resource.data.ownerEmpId == null
+          || (
+            request.resource.data.ownerEmpId is string
+            && exists(/databases/$(database)/documents/employees/$(request.resource.data.ownerEmpId))
+          )
+        );
+    }
+
+    function isDriverUnlock() {
+      return resource.data.status == 'empty'
+        && resource.data.ownerEmpId is string
+        && request.resource.data.status == 'unlocked'
+        && request.resource.data.ownerEmpId == resource.data.ownerEmpId
+        && request.resource.data.activeParcelId is string
+        && sameExcept(['status', 'activeParcelId']);
+    }
+
+    function isDriverOccupied() {
+      return resource.data.status == 'unlocked'
+        && request.resource.data.status == 'occupied'
+        && request.resource.data.ownerEmpId == resource.data.ownerEmpId
+        && request.resource.data.activeParcelId == resource.data.activeParcelId
+        && sameExcept(['status']);
+    }
+
+    function isOwnerEmpty() {
+      return resource.data.status == 'occupied'
+        && request.resource.data.status == 'empty'
+        && request.resource.data.activeParcelId == null
+        && request.resource.data.ownerEmpId == resource.data.ownerEmpId
+        && sameExcept(['status', 'activeParcelId']);
+    }
+
+    match /parcels/{parcelId} {
+      allow read: if true;
+      allow create: if isParcelCreate(parcelId);
+      allow update: if isDoorClosed() || isCollected();
+      allow delete: if false;
+    }
+
+    function isParcelCreate(parcelId) {
+      let data = request.resource.data;
+      let locker = lockerDoc(data.lockerNo);
+      return data.keys().hasOnly([
+          'lockerNo', 'empId', 'ownerName', 'department', 'courierCompany',
+          'reference', 'photoUrl', 'status', 'createdAt', 'siteOrigin'
+        ])
+        && data.lockerNo is int
+        && data.lockerNo >= 1
+        && data.lockerNo <= 4
+        && data.empId is string
+        && data.ownerName is string
+        && data.ownerName.size() < 80
+        && data.department is string
+        && data.department.size() < 80
+        && data.courierCompany is string
+        && data.courierCompany.size() > 0
+        && data.courierCompany.size() <= 80
+        && data.reference is string
+        && data.reference.size() <= 80
+        && data.photoUrl is string
+        && data.photoUrl.size() < 800
+        && data.photoUrl.matches('^https://res\\.cloudinary\\.com/jv9rdrky/.+')
+        && data.status == 'unlocked'
+        && data.createdAt == request.time
+        && data.siteOrigin is string
+        && data.siteOrigin.size() < 200
+        && data.siteOrigin.matches('^https://.+/|^http://(localhost|127\\.0\\.0\\.1)(:[0-9]+)?/')
+        && locker.ownerEmpId == data.empId
+        && locker.status == 'empty'
+        && locker.activeParcelId == null
+        && exists(/databases/$(database)/documents/employees/$(data.empId))
+        && parcelId.size() < 40;
+    }
+
+    function isDoorClosed() {
+      return resource.data.status == 'unlocked'
+        && request.resource.data.status == 'stored'
+        && request.resource.data.storedAt == request.time
+        && sameExcept(['status', 'storedAt']);
+    }
+
+    function isCollected() {
+      return resource.data.status == 'stored'
+        && request.resource.data.status == 'collected'
+        && request.resource.data.collectedAt == request.time
+        && sameExcept(['status', 'collectedAt']);
+    }
+
+    match /devices/{deviceId} {
+      allow read: if false;
+      allow create, update: if request.resource.data.keys().hasOnly(['empId', 'token', 'updatedAt'])
+        && request.resource.data.empId is string
+        && request.resource.data.empId.size() <= 20
+        && request.resource.data.token is string
+        && request.resource.data.token.size() > 20
+        && request.resource.data.token.size() < 500
+        && request.resource.data.updatedAt == request.time
+        && exists(/databases/$(database)/documents/employees/$(request.resource.data.empId))
+        && deviceId.matches('^EMP[0-9]{3}_[0-9a-f]{24}$');
+      allow delete: if false;
+    }
+  }
+}

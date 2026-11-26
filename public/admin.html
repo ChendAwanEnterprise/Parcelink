@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin · Bella Smart Parcel</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="/admin">
+      <span class="brand-mark">Bella</span>
+      <span class="brand-name">Smart Parcel</span>
+    </a>
+    <nav>
+      <a href="/admin" aria-current="page">Admin</a>
+      <a href="/courier">Drop-off</a>
+      <a href="/receiver">My parcels</a>
+      <a href="/collect">Collect</a>
+      <a href="/simulator">Simulator</a>
+      <a href="/hwtest">Hardware test</a>
+    </nav>
+  </header>
+  <main class="stack">
+    <div class="toolbar">
+      <div>
+        <h1>Reception desk</h1>
+        <p class="lede">Who has a parcel, which slot it is in, and whether the rack is online.</p>
+      </div>
+      <div id="pill" class="pill">Rack offline</div>
+    </div>
+    <div class="actions">
+      <button id="demo" type="button">Load demo</button>
+      <button id="clear" class="secondary" type="button">Clear parcels</button>
+      <a class="btn secondary" href="/simulator">Open simulator</a>
+    </div>
+    <p id="note" class="hint">Load demo fills slots 1 and 3. Drop off EMP003 (Aina) and the rack assigns slot 2. Open the simulator so the rack shows online.</p>
+    <section class="card access-layout">
+      <img id="qr" class="hidden" alt="Courier QR code" width="180" height="180">
+      <div class="access-copy">
+        <h2>Courier link</h2>
+        <p id="access-note" class="hint">Looking up this laptop's address…</p>
+        <p class="eyebrow">Laptop IP</p>
+        <p id="access-ip"></p>
+        <p class="eyebrow">Courier page</p>
+        <p id="access-url"></p>
+      </div>
+    </section>
+    <section id="grid" class="grid"></section>
+    <section class="card stack">
+      <div class="filters">
+        <input id="search" placeholder="Search by name" aria-label="Search by name">
+        <select id="filter" aria-label="Filter parcels">
+          <option value="all">All</option>
+          <option value="placing">Placing</option>
+          <option value="waiting">Waiting</option>
+          <option value="collected">Collected</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Parcel</th><th>Receiver</th><th>Slot</th><th>Status</th><th>Company</th></tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+      <article id="detail" class="detail hidden"></article>
+    </section>
+  </main>
+  <script src="/js/admin.js"></script>
+</body>
+</html>

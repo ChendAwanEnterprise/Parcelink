@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Parcel drop-off · Bella Smart Parcel</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="/courier">
+      <span class="brand-mark">Bella</span>
+      <span class="brand-name">Smart Parcel</span>
+    </a>
+    <nav>
+      <a href="/courier" aria-current="page">Drop-off</a>
+      <a href="/receiver">My parcels</a>
+      <a href="/collect">Collect</a>
+      <a href="/admin">Admin</a>
+    </nav>
+  </header>
+  <main class="narrow stack">
+    <div>
+      <h1>Parcel drop-off</h1>
+      <p class="lede">Enter the receiver. The rack lights the free slot.</p>
+    </div>
+    <p id="offline" class="banner bad hidden">Rack offline. The slot light will not turn on until the rack is connected. Wait, then submit.</p>
+    <form id="form" class="card">
+      <div class="field">
+        <label for="emp">Employee ID</label>
+        <input id="emp" name="empId" autocomplete="off" required placeholder="EMP003">
+        <div id="suggest" class="suggest hidden"></div>
+        <p id="picked" class="hint"></p>
+      </div>
+      <div class="field">
+        <label for="company">Courier company</label>
+        <input id="company" name="courierCompany" required placeholder="J&amp;T Express">
+      </div>
+      <div class="field">
+        <label for="reference">Tracking number <span class="hint">optional</span></label>
+        <input id="reference" name="reference" placeholder="JT123456">
+      </div>
+      <p id="error" class="banner bad hidden"></p>
+      <button id="submit" type="submit">Submit Delivery</button>
+    </form>
+  </main>
+  <script src="/js/courier.js"></script>
+</body>
+</html>

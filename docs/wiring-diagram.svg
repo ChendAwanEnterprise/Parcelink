@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 640" font-family="Segoe UI, Arial, sans-serif">
+  <rect width="980" height="640" fill="#f4f7f4"/>
+  <text x="32" y="42" font-size="26" font-weight="700" fill="#13281f">SPSR wiring — ESP32 DevKit, up to 6 slots</text>
+  <text x="32" y="68" font-size="14" fill="#5c6b63">LED: GPIO → 220 Ω → long leg (+) → short leg (−) → GND. Button: one leg to GPIO, diagonal leg to GND.</text>
+
+  <rect x="40" y="100" width="250" height="500" rx="16" fill="#13281f"/>
+  <text x="165" y="136" text-anchor="middle" fill="#f7f3ea" font-size="18" font-weight="700">ESP32</text>
+  <g fill="#d7f5e2" font-size="14">
+    <text x="60" y="180">GPIO 13  LED 1</text>
+    <text x="60" y="214">GPIO 12  LED 2</text>
+    <text x="60" y="248">GPIO 14  LED 3</text>
+    <text x="60" y="282">GPIO 27  LED 4</text>
+    <text x="60" y="316">GPIO 16  LED 5</text>
+    <text x="60" y="350">GPIO 17  LED 6</text>
+    <text x="60" y="400">GPIO 26  BTN 1</text>
+    <text x="60" y="434">GPIO 25  BTN 2</text>
+    <text x="60" y="468">GPIO 33  BTN 3</text>
+    <text x="60" y="502">GPIO 32  BTN 4</text>
+    <text x="60" y="536">GPIO 18  BTN 5</text>
+    <text x="60" y="570">GPIO 19  BTN 6</text>
+  </g>
+
+  <rect x="430" y="110" width="510" height="210" rx="16" fill="#ffffff" stroke="#d3dfd6"/>
+  <text x="450" y="142" font-size="16" font-weight="700" fill="#13281f">One LED (repeat per slot)</text>
+  <line x1="470" y1="190" x2="560" y2="190" stroke="#13281f" stroke-width="3"/>
+  <rect x="560" y="176" width="54" height="28" fill="#fff3df" stroke="#8a4e10"/>
+  <text x="587" y="195" text-anchor="middle" font-size="12" fill="#8a4e10">220 Ω</text>
+  <line x1="614" y1="190" x2="700" y2="190" stroke="#13281f" stroke-width="3"/>
+  <circle cx="730" cy="190" r="22" fill="#22d36b" stroke="#14663a"/>
+  <text x="730" y="195" text-anchor="middle" font-size="12" fill="#13281f">LED</text>
+  <text x="700" y="230" font-size="13" fill="#14663a">long leg +</text>
+  <line x1="730" y1="212" x2="730" y2="270" stroke="#13281f" stroke-width="3"/>
+  <text x="746" y="268" font-size="13" fill="#5c6b63">short leg − to GND</text>
+  <text x="450" y="290" font-size="13" fill="#5c6b63">GPIO 12 can block upload if the LED is on. Unplug slot 2 while uploading, or move that LED to GPIO 4.</text>
+
+  <rect x="430" y="340" width="510" height="180" rx="16" fill="#ffffff" stroke="#d3dfd6"/>
+  <text x="450" y="372" font-size="16" font-weight="700" fill="#13281f">One button (repeat per slot)</text>
+  <rect x="560" y="400" width="70" height="50" rx="6" fill="#efe7d6" stroke="#13281f"/>
+  <text x="595" y="430" text-anchor="middle" font-size="12">BTN</text>
+  <line x1="470" y1="415" x2="560" y2="415" stroke="#13281f" stroke-width="3"/>
+  <text x="470" y="406" font-size="12" fill="#5c6b63">GPIO</text>
+  <line x1="595" y1="450" x2="595" y2="490" stroke="#13281f" stroke-width="3"/>
+  <text x="610" y="488" font-size="13" fill="#5c6b63">diagonal leg → GND rail</text>
+  <text x="450" y="500" font-size="13" fill="#5c6b63">No resistor. The sketch uses INPUT_PULLUP. Use two legs that are diagonally opposite.</text>
+
+  <text x="450" y="570" font-size="14" fill="#13281f">Tie the breadboard GND rail to any ESP32 GND pin. USB cable must carry data, not charge only.</text>
+  <text x="450" y="596" font-size="14" fill="#13281f">Hotspot must be 2.4 GHz. The ESP32 cannot join a 5 GHz network.</text>
+</svg>

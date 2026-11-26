@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#13281f">
+  <title>Parcelink</title>
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="index.html">
+      <span class="brand-mark">Parcel</span>
+      <span class="brand-name">Parcelink</span>
+    </a>
+    <nav>
+      <a href="index.html" aria-current="page">Home</a>
+      <a href="owner.html">Owner</a>
+      <a href="admin.html">Admin</a>
+    </nav>
+  </header>
+  <main class="narrow stack">
+    <div>
+      <h1>Parcelink</h1>
+      <p class="lede">A driver scans the QR on a locker, leaves the parcel, and the owner is told.</p>
+    </div>
+    <section class="choices">
+      <article class="card">
+        <strong>Driver</strong>
+        <p class="hint">Scan the QR stuck on the locker box. That opens the delivery form for that locker.</p>
+      </article>
+      <a class="card choice" href="owner.html">
+        <strong>Owner</strong>
+        <p class="hint">See parcels in your locker and turn on notifications.</p>
+      </a>
+      <a class="card choice" href="admin.html">
+        <strong>Admin</strong>
+        <p class="hint">Choose who each locker belongs to, and print its QR code.</p>
+      </a>
+    </section>
+  </main>
+  <script src="config.js"></script>
+  <script type="module" src="js/home.js"></script>
+</body>
+</html>

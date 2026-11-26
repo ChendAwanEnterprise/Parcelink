@@ -1,0 +1,13 @@
+node_modules/
+functions/node_modules/
+.firebase/
+data/*.db
+data/*.db-wal
+data/*.db-shm
+dist/
+*.blob
+Parcel Rack.exe
+runtime/node.exe
+stage/
+print/
+SmartParcelRack_v1.0.zip

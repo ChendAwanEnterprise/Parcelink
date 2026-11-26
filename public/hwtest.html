@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hardware test · Bella Smart Parcel</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="/hwtest">
+      <span class="brand-mark">Bella</span>
+      <span class="brand-name">Smart Parcel</span>
+    </a>
+    <nav>
+      <a href="/hwtest" aria-current="page">Hardware test</a>
+      <a href="/simulator">Simulator</a>
+      <a href="/admin">Admin</a>
+    </nav>
+  </header>
+  <main class="stack">
+    <div class="toolbar">
+      <div>
+        <h1>Hardware test</h1>
+        <p class="lede">Each LED should follow its button. Each physical press should show the right slot number below.</p>
+      </div>
+      <div id="pill" class="pill">ESP32 offline</div>
+    </div>
+    <div class="card stack">
+      <label class="switch"><input id="testmode" type="checkbox"> Test mode (presses are logged and do not change parcels)</label>
+      <div class="actions">
+        <button type="button" data-all="on">All on</button>
+        <button type="button" data-all="off" class="secondary">All off</button>
+        <button type="button" data-all="blink" class="secondary">Blink all</button>
+      </div>
+      <div id="slots" class="hw-slots"></div>
+    </div>
+    <pre id="log" class="log">Waiting for button presses…</pre>
+    <p class="hint">Online means something is calling the rack every moment: the ESP32, or the simulator with Simulator active turned on.</p>
+  </main>
+  <script src="/js/hwtest.js"></script>
+</body>
+</html>

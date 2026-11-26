@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My parcels · Bella Smart Parcel</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="/receiver">
+      <span class="brand-mark">Bella</span>
+      <span class="brand-name">Smart Parcel</span>
+    </a>
+    <nav>
+      <a href="/receiver" aria-current="page">My parcels</a>
+      <a href="/collect">Collect</a>
+      <a href="/courier">Drop-off</a>
+      <a href="/admin">Admin</a>
+    </nav>
+  </header>
+  <main class="narrow stack">
+    <div>
+      <h1>My parcels</h1>
+      <p class="lede">Enter your Employee ID to see a parcel that is waiting and the pickup code.</p>
+    </div>
+    <div id="banner" class="banner good hidden"></div>
+    <form id="form" class="card">
+      <div class="field">
+        <label for="emp">Employee ID</label>
+        <input id="emp" autocomplete="off" required placeholder="EMP003">
+        <div id="suggest" class="suggest hidden"></div>
+      </div>
+      <button type="submit">Show my parcels</button>
+    </form>
+    <div id="results" class="stack"></div>
+  </main>
+  <script src="/js/receiver.js"></script>
+</body>
+</html>
