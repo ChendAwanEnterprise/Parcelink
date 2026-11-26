@@ -159,14 +159,28 @@ function lockerCard(lockerNo, locker, parcel) {
     card.append(dash);
   }
   if (parcel?.photoUrl) {
-    const img = document.createElement('img');
-    img.className = 'parcel-photo';
-    img.alt = 'Latest parcel photo';
-    img.src = parcel.photoUrl;
     const caption = document.createElement('p');
     caption.className = 'hint';
     caption.textContent = `${parcel.courierCompany || 'Parcel'} · ${parcel.status || ''}`;
-    card.append(img, caption);
+    const view = document.createElement('button');
+    view.type = 'button';
+    view.className = 'secondary';
+    view.textContent = 'View photo';
+    const img = document.createElement('img');
+    img.className = 'parcel-photo hidden';
+    img.alt = 'Latest parcel photo';
+    view.addEventListener('click', () => {
+      const showing = !img.classList.contains('hidden');
+      if (showing) {
+        img.classList.add('hidden');
+        view.textContent = 'View photo';
+        return;
+      }
+      if (!img.getAttribute('src')) img.src = parcel.photoUrl;
+      img.classList.remove('hidden');
+      view.textContent = 'Hide photo';
+    });
+    card.append(caption, view, img);
   }
   return card;
 }
