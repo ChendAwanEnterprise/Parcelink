@@ -143,8 +143,8 @@ button:disabled { opacity: 0.45; cursor: not-allowed; }
 
 .locker-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
 .qr-wrap { display: grid; justify-items: start; gap: 0.35rem; }
-.qr-wrap canvas { width: 180px; height: 180px; background: white; border-radius: 12px; }
-.url-line { margin: 0; font-weight: 700; overflow-wrap: anywhere; }
+.qr-wrap img { width: 180px; height: 180px; background: white; border-radius: 12px; }
+.qr-wrap a { font-weight: 700; overflow-wrap: anywhere; }
 .parcel-photo { width: 100%; max-height: 180px; object-fit: cover; border-radius: 12px; background: var(--cream); }
 .card > button { margin-top: 0.8rem; }
 .who { color: var(--muted); margin: 0.2rem 0 0.8rem; }

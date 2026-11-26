@@ -1,4 +1,4 @@
-const CACHE = 'parcelink-v2';
+const CACHE = 'parcelink-v3';
 const SHELL = [
   './index.html',
   './register.html',
@@ -15,6 +15,7 @@ const SHELL = [
   './js/drop.js',
   './js/owner.js',
   './js/admin.js',
+  './js/qrcode-generator.js',
   './icons/icon-192.png',
   './icons/icon-512.png',
 ];

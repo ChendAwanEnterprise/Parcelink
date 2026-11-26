@@ -98,13 +98,21 @@ function lockerCard(lockerNo, locker, parcel) {
 
   const qrWrap = document.createElement('div');
   qrWrap.className = 'qr-wrap';
-  const canvas = document.createElement('canvas');
   const url = pageUrl('drop.html', { locker: String(lockerNo) });
-  const link = document.createElement('p');
-  link.className = 'url-line';
+  const image = document.createElement('img');
+  image.alt = `QR code for locker ${String(lockerNo).padStart(2, '0')}`;
+  image.width = 180;
+  image.height = 180;
+  if (typeof qrcode === 'function') {
+    const code = qrcode(0, 'M');
+    code.addData(url);
+    code.make();
+    image.src = code.createDataURL(6, 2);
+  }
+  const link = document.createElement('a');
+  link.href = url;
   link.textContent = url;
-  qrWrap.append(canvas, link);
-  if (window.QRCode) window.QRCode.toCanvas(canvas, url, { margin: 1, width: 180 });
+  qrWrap.append(image, link);
 
   card.append(heading, state, field, save, qrWrap);
   if (parcel?.photoUrl) {
