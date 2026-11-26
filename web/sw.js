@@ -1,27 +1,16 @@
-const CACHE = 'parcelink-v3';
-const SHELL = [
+const CACHE = 'parcelink-v4';
+const PRECACHE = [
   './index.html',
-  './register.html',
-  './drop.html',
-  './owner.html',
-  './admin.html',
-  './config.js',
-  './manifest.webmanifest',
   './css/style.css',
+  './config.js',
   './js/common.js',
-  './js/firebase.js',
   './js/home.js',
-  './js/register.js',
-  './js/drop.js',
-  './js/owner.js',
-  './js/admin.js',
-  './js/qrcode-generator.js',
   './icons/icon-192.png',
-  './icons/icon-512.png',
+  './manifest.webmanifest',
 ];
 
 self.addEventListener('install', (event) => {
-  event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(SHELL)).then(() => self.skipWaiting()));
+  event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(PRECACHE)).then(() => self.skipWaiting()));
 });
 
 self.addEventListener('activate', (event) => {
@@ -32,18 +21,28 @@ self.addEventListener('activate', (event) => {
   );
 });
 
+function fromNetwork(request) {
+  return fetch(request).then((response) => {
+    if (response.ok) {
+      const copy = response.clone();
+      caches.open(CACHE).then((cache) => cache.put(request, copy));
+    }
+    return response;
+  });
+}
+
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
   if (event.request.method !== 'GET' || url.origin !== self.location.origin) return;
+  const staticFile = /\.(?:css|js|png|webmanifest)$/.test(url.pathname);
+  if (staticFile) {
+    event.respondWith(caches.match(event.request).then((cached) => {
+      const network = fromNetwork(event.request).catch(() => cached);
+      return cached || network;
+    }));
+    return;
+  }
   event.respondWith(
-    fetch(event.request)
-      .then((response) => {
-        if (response.ok) {
-          const copy = response.clone();
-          caches.open(CACHE).then((cache) => cache.put(event.request, copy));
-        }
-        return response;
-      })
-      .catch(() => caches.match(event.request).then((cached) => cached || caches.match('./index.html')))
+    fromNetwork(event.request).catch(() => caches.match(event.request).then((cached) => cached || caches.match('./index.html')))
   );
 });

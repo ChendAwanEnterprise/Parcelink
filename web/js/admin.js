@@ -1,18 +1,20 @@
 import { config, explain, pageUrl, registerWorker, showBanner } from './common.js';
-import {
-  EMPLOYEES,
-  auth,
-  collection,
-  db,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  setDoc,
-  updateDoc,
-  where,
-} from './firebase.js';
-import { onAuthStateChanged as watchAuth, signInWithEmailAndPassword, signOut } from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js';
+import { app, collection, db, doc, getDocs, setDoc, updateDoc } from './store.js';
+import { getAuth, onAuthStateChanged as watchAuth, signInWithEmailAndPassword, signOut } from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js';
+
+const EMPLOYEES = [
+  ['EMP001', 'Farah', 'Reception'],
+  ['EMP002', 'Daniel', 'Operations'],
+  ['EMP003', 'Aina', 'Finance'],
+  ['EMP004', 'Hafiz', 'IT'],
+  ['EMP005', 'Mei Ling', 'HR'],
+  ['EMP006', 'Arif', 'Sales'],
+  ['EMP007', 'Sofia', 'Marketing'],
+  ['EMP008', 'Johan', 'Warehouse'],
+  ['EMP009', 'Nurul', 'Admin'],
+  ['EMP010', 'Chris', 'Engineering'],
+];
+const auth = getAuth(app);
 
 const signIn = document.querySelector('#signin');
 const desk = document.querySelector('#desk');
@@ -33,25 +35,26 @@ function option(value, label) {
 }
 
 async function seed() {
-  for (const [empId, name, department] of EMPLOYEES) {
-    const ref = doc(db, 'employees', empId);
-    const snap = await getDoc(ref);
-    if (!snap.exists()) await setDoc(ref, { empId, name, department });
-  }
+  const [people, lockerSnap] = await Promise.all([
+    getDocs(collection(db, 'employees')),
+    getDocs(collection(db, 'lockers')),
+  ]);
+  const ids = new Set(people.docs.map((item) => item.id));
+  const lockerIds = new Set(lockerSnap.docs.map((item) => item.id));
+  const writes = EMPLOYEES
+    .filter(([empId]) => !ids.has(empId))
+    .map(([empId, name, department]) => setDoc(doc(db, 'employees', empId), { empId, name, department }));
   for (let lockerNo = 1; lockerNo <= 4; lockerNo += 1) {
-    const ref = doc(db, 'lockers', String(lockerNo));
-    const snap = await getDoc(ref);
-    if (!snap.exists()) {
-      await setDoc(ref, { lockerNo, ownerEmpId: null, status: 'empty', activeParcelId: null });
+    if (!lockerIds.has(String(lockerNo))) {
+      writes.push(setDoc(doc(db, 'lockers', String(lockerNo)), {
+        lockerNo,
+        ownerEmpId: null,
+        status: 'empty',
+        activeParcelId: null,
+      }));
     }
   }
-}
-
-async function latestParcel(lockerNo) {
-  const snap = await getDocs(query(collection(db, 'parcels'), where('lockerNo', '==', lockerNo)));
-  return snap.docs
-    .map((item) => ({ id: item.id, ...item.data() }))
-    .sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0))[0] || null;
+  await Promise.all(writes);
 }
 
 function lockerCard(lockerNo, locker, parcel) {
@@ -128,19 +131,26 @@ function lockerCard(lockerNo, locker, parcel) {
   return card;
 }
 
-async function loadStaff() {
-  const snap = await getDocs(collection(db, 'employees'));
-  staff = snap.docs
+async function render() {
+  const [people, lockerSnap, parcelSnap] = await Promise.all([
+    getDocs(collection(db, 'employees')),
+    getDocs(collection(db, 'lockers')),
+    getDocs(collection(db, 'parcels')),
+  ]);
+  staff = people.docs
     .map((item) => item.data())
     .sort((a, b) => String(a.empId).localeCompare(String(b.empId)));
-}
-
-async function render() {
-  await loadStaff();
+  const lockers = new Map(lockerSnap.docs.map((item) => [item.id, item.data()]));
+  const latest = new Map();
+  for (const item of parcelSnap.docs) {
+    const parcel = { id: item.id, ...item.data() };
+    const key = String(parcel.lockerNo);
+    const previous = latest.get(key);
+    if (!previous || (parcel.createdAt?.seconds || 0) > (previous.createdAt?.seconds || 0)) latest.set(key, parcel);
+  }
   const cards = [];
   for (let lockerNo = 1; lockerNo <= 4; lockerNo += 1) {
-    const snap = await getDoc(doc(db, 'lockers', String(lockerNo)));
-    cards.push(lockerCard(lockerNo, snap.data() || {}, await latestParcel(lockerNo)));
+    cards.push(lockerCard(lockerNo, lockers.get(String(lockerNo)) || {}, latest.get(String(lockerNo)) || null));
   }
   grid.replaceChildren(...cards);
 }

@@ -1,5 +1,6 @@
 import { explain, pageUrl, registerWorker, showBanner, siteRoot, withTimeout } from './common.js';
-import { db, doc, getDoc, runTransaction, serverTimestamp, uploadPhoto } from './firebase.js';
+import { uploadPhoto } from './photo.js';
+import { db, doc, getDoc } from './store.js';
 
 const lockerNo = Number(new URLSearchParams(location.search).get('locker'));
 const form = document.querySelector('#form');
@@ -89,16 +90,17 @@ form.addEventListener('submit', async (event) => {
   submit.disabled = true;
   try {
     const photoUrl = await uploadPhoto(file);
-    const lockerRef = doc(db, 'lockers', String(lockerNo));
-    const createdId = await withTimeout(runTransaction(db, async (tx) => {
+    const live = await import('./firebase.js');
+    const lockerRef = live.doc(live.db, 'lockers', String(lockerNo));
+    const createdId = await withTimeout(live.runTransaction(live.db, async (tx) => {
       const lockerSnap = await tx.get(lockerRef);
       const locker = lockerSnap.data();
       if (!locker || locker.status !== 'empty' || !locker.ownerEmpId) {
         throw new Error('This locker is not ready for a delivery.');
       }
-      const person = await tx.get(doc(db, 'employees', locker.ownerEmpId));
+      const person = await tx.get(live.doc(live.db, 'employees', locker.ownerEmpId));
       const employee = person.data() || {};
-      const parcelRef = doc(db, 'parcels', `P-${Date.now()}`);
+      const parcelRef = live.doc(live.db, 'parcels', `P-${Date.now()}`);
       tx.set(parcelRef, {
         lockerNo,
         empId: locker.ownerEmpId,
@@ -108,7 +110,7 @@ form.addEventListener('submit', async (event) => {
         reference: reference.slice(0, 80),
         photoUrl,
         status: 'unlocked',
-        createdAt: serverTimestamp(),
+        createdAt: live.serverTimestamp(),
         siteOrigin: siteRoot().href,
       });
       tx.update(lockerRef, { status: 'unlocked', activeParcelId: parcelRef.id });
@@ -125,15 +127,16 @@ closeDoor.addEventListener('click', async () => {
   if (!parcelId) return;
   closeDoor.disabled = true;
   try {
-    await withTimeout(runTransaction(db, async (tx) => {
-      const lockerRef = doc(db, 'lockers', String(lockerNo));
-      const parcelRef = doc(db, 'parcels', parcelId);
+    const live = await import('./firebase.js');
+    await withTimeout(live.runTransaction(live.db, async (tx) => {
+      const lockerRef = live.doc(live.db, 'lockers', String(lockerNo));
+      const parcelRef = live.doc(live.db, 'parcels', parcelId);
       const lockerSnap = await tx.get(lockerRef);
       const parcelSnap = await tx.get(parcelRef);
       if (!lockerSnap.exists() || lockerSnap.data().activeParcelId !== parcelId || parcelSnap.data()?.status !== 'unlocked') {
         throw new Error('This delivery is no longer waiting to be closed.');
       }
-      tx.update(parcelRef, { status: 'stored', storedAt: serverTimestamp() });
+      tx.update(parcelRef, { status: 'stored', storedAt: live.serverTimestamp() });
       tx.update(lockerRef, { status: 'occupied' });
     }));
     unlocked.replaceChildren();

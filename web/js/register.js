@@ -1,5 +1,5 @@
 import { explain, registerWorker, showBanner } from './common.js';
-import { collection, db, doc, getDocs, setDoc } from './firebase.js';
+import { collection, db, doc, getDocs, setDoc } from './store.js';
 
 const form = document.querySelector('#form');
 const done = document.querySelector('#done');
