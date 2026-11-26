@@ -52,7 +52,12 @@ export function installedApp() {
 }
 
 export function iosInstallMessage() {
-  return 'On iPhone, Chrome cannot turn on notifications inside the browser. Tap Share, then Add to Home Screen. Open Parcelink from that icon, then tap Enable notifications.';
+  const chrome = /CriOS/i.test(navigator.userAgent || '');
+  if (!installedApp()) {
+    const opener = chrome ? 'Chrome on iPhone cannot turn on alerts. Open this page in Safari, tap Share, then Add to Home Screen.' : 'Alerts on iPhone only work from the Home Screen. In Safari, tap Share, then Add to Home Screen.';
+    return `${opener} Open the Parcelink icon and tap Enable notifications.`;
+  }
+  return 'This iPhone still cannot show alerts. Update iOS, then open Parcelink from the Home Screen icon you added in Safari.';
 }
 
 export function showBanner(node, message, kind) {
