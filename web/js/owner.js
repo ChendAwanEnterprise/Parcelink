@@ -33,8 +33,13 @@ function parcelNode(id, parcel) {
   meta.className = 'hint';
   const locker = String(parcel.lockerNo || '').padStart(2, '0');
   const tracking = parcel.reference ? ` · ${parcel.reference}` : '';
-  const state = parcel.status === 'collected' ? 'Collected' : parcel.status === 'stored' ? 'In the locker' : 'Being placed';
-  meta.textContent = `Locker ${locker}${tracking} · ${state}`;
+  const statusKey = parcel.status === 'collected' || parcel.status === 'stored' ? parcel.status : 'unlocked';
+  const state = statusKey === 'collected' ? 'Collected' : statusKey === 'stored' ? 'In the locker' : 'Being placed';
+  meta.textContent = `Locker ${locker}${tracking}`;
+  const pill = document.createElement('span');
+  pill.className = `pill pill-${statusKey}`;
+  pill.textContent = state;
+  meta.append(document.createTextNode(' · '), pill);
   card.append(company, meta);
   if (parcel.photoUrl) {
     const img = document.createElement('img');

@@ -66,8 +66,13 @@ function lockerCard(lockerNo, locker, parcel) {
   state.className = 'who';
   const owner = staff.find((person) => person.empId === locker.ownerEmpId);
   const ownerLabel = owner ? `${owner.name} · ${owner.empId}` : 'No owner';
-  const statusLabel = locker.status === 'empty' ? 'Empty' : locker.status === 'unlocked' ? 'Unlocked' : 'Occupied';
-  state.textContent = `${ownerLabel} · ${statusLabel}`;
+  const statusKey = locker.status === 'unlocked' || locker.status === 'occupied' ? locker.status : 'empty';
+  const statusLabel = statusKey === 'empty' ? 'Empty' : statusKey === 'unlocked' ? 'Unlocked' : 'Occupied';
+  state.textContent = ownerLabel;
+  const pill = document.createElement('span');
+  pill.className = `pill pill-${statusKey}`;
+  pill.textContent = statusLabel;
+  state.append(document.createTextNode(' · '), pill);
 
   const field = document.createElement('div');
   field.className = 'field';
