@@ -3,18 +3,23 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#f5f5f7">
+  <meta name="theme-color" content="#032449">
   <title>Parcelink</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
-  <link rel="icon" href="icons/icon-192.png">
-  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="icon" type="image/png" href="icons/favicon-64.png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Parcelink">
   <link rel="manifest" href="manifest.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,700;1,700;1,800&display=swap">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <header class="top">
-    <a class="brand" href="index.html">Parcelink</a>
+    <a class="brand" href="index.html" aria-label="Parcelink home"><img src="brand/logo-horizontal-light.webp" alt="Parcelink" width="230" height="34"></a>
     <nav>
       <a href="index.html" aria-current="page">Home</a>
       <a href="register.html">Register</a>
@@ -22,25 +27,34 @@
       <a href="admin.html">Admin</a>
     </nav>
   </header>
-  <main class="narrow stack">
-    <div>
-      <h1>Parcelink</h1>
-      <p class="lede">A driver scans the QR on a locker, leaves the parcel, and the owner is told.</p>
+  <section class="hero">
+    <h1 class="sr-only">Parcelink</h1>
+    <img src="brand/logo-full-light.webp" alt="Parcelink" width="900" height="539">
+    <p>A driver scans the QR on a locker, leaves the parcel, and the owner is told.</p>
+    <div class="cta">
+      <a class="btn" href="owner.html">Open my locker</a>
+      <a class="btn secondary" href="register.html">Get a staff ID</a>
     </div>
-    <section class="choices">
+  </section>
+  <main class="narrow stack">
+    <section class="choices" aria-label="Who are you?">
       <article class="card">
+        <span class="role-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3M21 14v.01M14 21h3M21 18v3"/></svg></span>
         <strong>Driver</strong>
         <p class="hint">Scan the QR stuck on the locker box. That opens the delivery form for that locker.</p>
       </article>
       <a class="card choice" href="register.html">
+        <span class="role-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M6 16c.6-1.4 1.7-2 3-2s2.4.6 3 2M14 10h4M14 14h3"/></svg></span>
         <strong>Register</strong>
         <p class="hint">Get a staff ID. That ID is how your phone receives locker notifications.</p>
       </a>
       <a class="card choice" href="owner.html">
+        <span class="role-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 8l9-5 9 5v8l-9 5-9-5z"/><path d="M3 8l9 5 9-5M12 13v8M7.5 5.5l9 5"/></svg></span>
         <strong>Owner</strong>
         <p class="hint">See parcels in your locker and turn on notifications.</p>
       </a>
       <a class="card choice" href="admin.html">
+        <span class="role-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.4 8-8 9-4.6-1-8-4.5-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg></span>
         <strong>Admin</strong>
         <p class="hint">Choose who each locker belongs to, and print its QR code.</p>
       </a>

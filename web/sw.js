@@ -1,4 +1,4 @@
-const CACHE = 'parcelink-v11';
+const CACHE = 'parcelink-v12';
 const PRECACHE = [
   './index.html',
   './css/style.css',
@@ -6,6 +6,9 @@ const PRECACHE = [
   './js/common.js',
   './js/home.js',
   './icons/icon-192.png',
+  './icons/favicon-64.png',
+  './brand/logo-horizontal-light.webp',
+  './brand/logo-full-light.webp',
   './manifest.webmanifest',
 ];
 
@@ -34,7 +37,7 @@ function fromNetwork(request) {
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
   if (event.request.method !== 'GET' || url.origin !== self.location.origin) return;
-  const staticFile = /\.(?:css|js|png|webmanifest)$/.test(url.pathname);
+  const staticFile = /\.(?:css|js|png|webp|webmanifest)$/.test(url.pathname);
   if (staticFile) {
     event.respondWith(caches.match(event.request).then((cached) => {
       const network = fromNetwork(event.request).catch(() => cached);
